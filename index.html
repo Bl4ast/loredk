@@ -6,7 +6,7 @@
     <title>Harry Fork</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Caveat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -55,9 +55,9 @@
 
         /* ====== TIPOGRAFIA SEGURA ====== */
         h2.titulo-manuscrito { font-size: 42px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid rgba(31, 17, 7, 0.3); display: inline-block; outline: none; line-height: 1.1; min-height: 1.2em;}
-        .paragrafo-normal { margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em;}
-        .torto { display: block; transform: rotate(-2deg); margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em;}
-        .torto-direito { display: block; transform: rotate(2deg); margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em;}
+        .paragrafo-normal { margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em; white-space: pre-wrap;}
+        .torto { display: block; transform: rotate(-2deg); margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em; white-space: pre-wrap;}
+        .torto-direito { display: block; transform: rotate(2deg); margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em; white-space: pre-wrap;}
         .destaque { font-weight: bold; font-size: 30px; letter-spacing: 1px;}
         
         .elemento-arrastavel { position: absolute !important; cursor: grab; z-index: 800; mix-blend-mode: multiply; user-select: none; }
@@ -77,35 +77,12 @@
         #painel-editor.aberto { right: 0; }
         .ferramenta-btn { display: block; width: 100%; background: transparent; color: #e8d8bd; border: 1px solid rgba(184, 134, 11, 0.4); padding: 10px; margin-bottom: 8px; border-radius: 4px; cursor: pointer; text-align: left; transition: 0.2s; font-size: 14px;}
         .ferramenta-btn:hover { background: rgba(184, 134, 11, 0.2); border-color: #b8860b; }
-        #upload-imagem { display: none; }
         .btn-salvar { background: #b8860b; color: #172419; font-weight: bold; text-align: center; margin-top: 15px;}
     </style>
 </head>
 <body>
 
-    <script id="data-storage" type="application/json">
-        [
-          {
-            "esq": "<h2 class=\"titulo-manuscrito\">3 de março de 1921</h2><p class=\"paragrafo-normal\">Minha mãe me disse que as crianças esquecem rápido das coisas.</p><p class=\"torto\">Talvez ela esteja certa....</p><p class=\"paragrafo-normal\">Por isso decidi que irei anotar todas as coisas!!!!</p><p class=\"paragrafo-normal\">Tenho nove anos e eu acho que eu já percebi algo estranho nas pessoas adultas elas tendem fingem que lembram das coisas que entendem de tudo. Fingem muito bem mas não o suficiente. Elas esquecem e mentem acima de tudo buscando sempre estarem certas.</p><p class=\"torto-direito destaque\">Não sei exatamente o motivo disso</p>",
-            "dir": "<h2 class=\"titulo-manuscrito\">12 de março de 1921</h2><p class=\"paragrafo-normal\">Tenho uma casa pequena e simples, infelizmente pequena demais para quatro pessoas. Mas eu não me importo pelo menos ficamos bem juntos.</p><p class=\"paragrafo-normal\">Quando chove, a água escorre perto da janela da cozinha e meu pai fica irritado porque acha desperdício usar baldes bons para conter goteira. Minha mãe canta enquanto cozinha mesmo quando está triste. Principalmente quando está triste.</p><p class=\"torto-direito destaque\">Ela sempre está triste..<br>(DESENHO TRISTE DA MÃE)</p>"
-          },
-          {
-            "esq": "<h2 class=\"titulo-manuscrito\">18 de Março de 1921</h2><p class=\"torto-direito destaque\">DESCOBRI ALGO IMPORTANTE</p><p class=\"paragrafo-normal\">Pessoas mudam a voz dependendo de quem está ouvindo. Meu pai usa uma voz cansada comigo, uma voz educada com visitas e uma voz fria quando acha que ninguém está olhando.</p><p class=\"torto\">Isso é fascinante...</p><p class=\"paragrafo-normal\">Passei o jantar inteiro observando isso, e realmente é muito divertido. </p><p class=\"torto-direito destaque\">Ninguém percebe crianças quietas.</p>",
-            "dir": "<h2 class=\"titulo-manuscrito\">2 de Abril de 1921</h2><p class=\"torto-direito destaque\">Não consigo parar de perguntar coisas</p><p class=\"paragrafo-normal\">Hoje perguntei para minha mãe se ela ainda amava meu pai, ela deixou cair um prato... </p><p class=\"torto-direito destaque\">Acho que existem perguntas que pessoas adultas evitam porque sabem exatamente a resposta.</p>"
-          },
-          {
-            "esq": "<h2 class=\"titulo-manuscrito\">3 de Junho de 1921</h2><br><p class=\"torto-direito destaque\">Meu irmão voltou estranho</p><p class=\"paragrafo-normal\">Disseram que ele apenas se perdeu na floresta..</p><p class=\"torto\">Mentira!!!</p><p class=\"paragrafo-normal\">Pessoas não voltam com aquele olhar depois de simplesmente se perderem, Ele quase não fala agora. Passa horas parado olhando paredes ou janelas como se estivesse esperando algo aparecer do outro lado.</p><p class=\"torto\">Hoje perguntei o que aconteceu lá</p><p class=\"torto-direito destaque\">“Não gosto quando a floresta olha de volta.”</p>",
-            "dir": "<h2 class=\"titulo-manuscrito\">6 de Maio de 1927</h2><p class=\"torto-direito destaque\">Talvez eu devesse parar de escrever</p><p class=\"paragrafo-normal\">Começo a sentir que quanto mais registro as coisas… mais distante das pessoas eu fico, como se eu estivesse estudando os seres ao invés de vivendo entre eles.</p><p class=\"torto-direito destaque\">Isso não parece saudável.</p>"
-          },
-          {
-            "esq": "<h2 class=\"titulo-manuscrito\">17 de Junho de 1928</h2><p class=\"torto-direito destaque\">Última anotação.</p><p class=\"paragrafo-normal\">Meu pai encontrou alguns dos meus cadernos, ele parecia assustado, perguntou por que escrevo sobre pessoas daquele jeito.</p><p class=\"torto\">Não consegui responder</p><p class=\"paragrafo-normal\">Talvez porque eu também não saiba mais, vou parar de escrever por um tempo, Talvez esquecer algumas coisas seja necessário para continuar</p>",
-            "dir": "<br><br><br><p class=\"torto-direito destaque\">(obs: nn acabou pula umas 3 paginas)</p>"
-          },
-          { "esq": "", "dir": "" },
-          { "esq": "", "dir": "" },
-          { "esq": "", "dir": "" }
-        ]
-    </script>
+    <script id="data-storage" type="application/json">[{"esq":"<h2 class=\"titulo-manuscrito\">3 de março de 1921</h2><p class=\"paragrafo-normal\">Minha mãe me disse que as crianças esquecem rápido das coisas.</p><p class=\"torto\">Talvez ela esteja certa....</p><p class=\"paragrafo-normal\">Por isso decidi que irei anotar todas as coisas!!!!</p><p class=\"paragrafo-normal\">Tenho nove anos e eu acho que eu já percebi algo estranho nas pessoas adultas elas tendem fingem que lembram das coisas que entendem de tudo. Fingem muito bem mas não o suficiente. Elas esquecem e mentem acima de tudo buscando sempre estarem certas.</p><p class=\"torto-direito destaque\">Não sei exatamente o motivo disso</p>","dir":"<h2 class=\"titulo-manuscrito\">12 de março de 1921</h2><p class=\"paragrafo-normal\">Tenho uma casa pequena e simples, infelizmente pequena demais para quatro pessoas. Mas eu não me importo pelo menos ficamos bem juntos.</p><p class=\"paragrafo-normal\">Quando chove, a água escorre perto da janela da cozinha e meu pai fica irritado porque acha desperdício usar baldes bons para conter goteira. Minha mãe canta enquanto cozinha mesmo quando está triste. Principalmente quando está triste.</p><p class=\"torto-direito destaque\">Ela sempre está triste..<br>(DESENHO TRISTE DA MÃE)</p>"},{"esq":"<h2 class=\"titulo-manuscrito\">18 de Março de 1921</h2><p class=\"torto-direito destaque\">DESCOBRI ALGO IMPORTANTE</p><p class=\"paragrafo-normal\">Pessoas mudam a voz dependendo de quem está ouvindo. Meu pai usa uma voz cansada comigo, uma voz educada com visitas e uma voz fria quando acha que ninguém está olhando.</p><p class=\"torto\">Isso é fascinante...</p><p class=\"paragrafo-normal\">Passei o jantar inteiro observando isso, e realmente é muito divertido. </p><p class=\"torto-direito destaque\">Ninguém percebe crianças quietas.</p>","dir":"<h2 class=\"titulo-manuscrito\">2 de Abril de 1921</h2><p class=\"torto-direito destaque\">Não consigo parar de perguntar coisas</p><p class=\"paragrafo-normal\">Hoje perguntei para minha mãe se ela ainda amava meu pai, ela deixou cair um prato... </p><p class=\"torto-direito destaque\">Acho que existem perguntas que pessoas adultas evitam because sabem exatamente a resposta.</p>"},{"esq":"<h2 class=\"titulo-manuscrito\">3 de Junho de 1921</h2><br><p class=\"torto-direito destaque\">Meu irmão voltou estranho</p><p class=\"paragrafo-normal\">Disseram que ele apenas se perdeu na floresta..</p><p class=\"torto\">Mentira!!!</p><p class=\"paragrafo-normal\">Pessoas não voltam com aquele olhar depois de simplesmente se perderem, Ele quase não fala agora. Passa horas parado olhando paredes ou janelas como se estivesse esperando algo aparecer do outro lado.</p><p class=\"torto\">Hoje perguntei o que aconteceu lá</p><p class=\"torto-direito destaque\">“Não gosto quando a floresta olha de volta.”</p>","dir":"<h2 class=\"titulo-manuscrito\">6 de Maio de 1927</h2><p class=\"torto-direito destaque\">Talvez eu devesse parar de escrever</p><p class=\"paragrafo-normal\">Começo a sentir que quanto mais registro as coisas… mais distante das pessoas eu fico, como se eu estivesse estudando os seres ao invés de vivendo entre eles.</p><p class=\"torto-direito destaque\">Isso não parece saudável.</p>"},{"esq":"<h2 class=\"titulo-manuscrito\">17 de Junho de 1928</h2><p class=\"torto-direito destaque\">Última anotação.</p><p class=\"paragrafo-normal\">Meu pai encontrou alguns dos meus cadernos, ele parecia assustado, perguntou por que escrevo sobre pessoas daquele jeito.</p><p class=\"torto\">Não consegui responder</p><p class=\"paragrafo-normal\">Talvez porque eu também não saiba mais, vou parar de escrever por um tempo, Talvez esquecer algumas coisas seja necessário para continuar</p>","dir":"<br><br><br><p class=\"torto-direito destaque\">(obs: nn acabou pula umas 3 paginas)</p>"},{"esq":"","dir":""},{"esq":"","dir":""},{"esq":"<h2 class=\"titulo-manuscrito\">11 de Outubro de 1934</h2><p class=\"paragrafo-normal\">Meu pai morreu hoje...</p><p class=\"paragrafo-normal\">A casa inteira parece presa naquela sensação depois de uma discussão, quando tudo fica silencioso demais e ninguém sabe exatamente como agir. Só que agora não existe possibilidade de outra discussão acontecer amanhã. Acho que essa é a parte que minha cabeça ainda não conseguiu aceitar.</p><p class=\"paragrafo-normal\">Minha mãe ficou sentada na cozinha por horas segurando a mesma xícara fria. Ela parecia perdida de um jeito que nunca tinha visto antes. Não tristeza exatamente.&nbsp;</p>","dir":"<p class=\"paragrafo-normal\">Era mais como alguém que passou tantos anos vivendo ao redor de outra pessoa que esqueceu como ocupar espaço sozinha.</p><p class=\"torto\">E honestamente? Eu não sei o que sentir sobre ele.</p><p class=\"paragrafo-normal\">Passei anos tentando entender meu pai. As vezes parecia um homem inteligente e cansado pelo próprio passado. Em outros momentos conseguia transformar o ar da casa em algo sufocante sem nem precisar levantar a voz. Ele tinha essa maneira cruel de diminuir pessoas aos poucos, como água desgastando pedra.&nbsp;</p><p class=\"torto\">A pior parte é que ainda assim eu não consigo odiá-lo completamente.</p>"},{"esq":"<h2 class=\"titulo-manuscrito\">18 de Outubro de 1934</h2><p class=\"torto-direito destaque\">A casa parece diferente agora</p><p class=\"paragrafo-normal\">Hoje minha mãe abriu as janelas da cozinha e deixou o vento entrar sem se preocupar.&nbsp;</p><p class=\"paragrafo-normal\">Isso parece uma coisa tão pequena escrita no papel, mas fiquei olhando as cortinas balançando por tempo demais..<br>Meu pai odiava vento dentro de casa. Dizia que bagunçava tudo, então durante anos as janelas permaneceram fechadas quase o tempo inteiro.</p><p class=\"torto-direito destaque\">É estranho perceber quantos hábitos continuam vivos mesmo depois que alguém morre</p>","dir":"<h2 class=\"titulo-manuscrito\">9 de Novembro de 1934</h2><p class=\"torto-direito destaque\">Realmente não sei conversar</p><p class=\"paragrafo-normal\">Hoje uma mulher comentou casualmente que sempre consegue sentir cheiro de chuva antes dela cair.</p><p class=\"paragrafo-normal\">A conversa podia acabar ali, mas minha cabeça imediatamente começou a correr atrás daquilo. Perguntei se o cheiro vinha da terra, do vento ou da umidade do ar.</p><p class=\"torto\">Ela me olhou estranho...</p><p class=\"torto-direito destaque\">Talvez eu realmente seja</p>"},{"esq":"<h2 class=\"titulo-manuscrito\">14 de Janeiro de 1935</h2><p class=\"torto-direito destaque\">Minha mãe voltou a cantar enquanto cozinha!</p><p class=\"paragrafo-normal\">Foi baixinho, quase distraída. Quando percebeu que eu estava ouvindo, parou imediatamente e ficou sem graça como alguém pego fazendo algo errado.</p><p class=\"paragrafo-normal\">Acho que meu pai destruiu certas partes dela devagar demais para que qualquer um percebesse enquanto acontecia.</p><p class=\"torto-direito destaque\">Agora parece que ela está reaprendening a existir sem medo.</p>","dir":"<h2 class=\"titulo-manuscrito\">2 de Março de 1935</h2><p class=\"torto-direito destaque\">Conheci um homem no porto hoje</p><p class=\"paragrafo-normal\">Ele tinha uma tatuagem enorme de baleia cobrindo o braço inteiro. Perguntei sobre ela e acabamos conversando por quase uma hora sobre oceano, navios e criaturas que vivem em lugares onde luz nunca chegou.</p><p class=\"paragrafo-normal\">Desde então não consigo parar de pensar no fato de que o mundo provavelmente é muito maior e mais estranho do que conseguimos perceber vivendo vidas pequenas em cidades pequenas.</p>"}]</script>
 
     <button id="btn-toggle-editor"><i class="fa-solid fa-wand-magic-sparkles"></i> Ativar Modo Editor</button>
 
@@ -119,11 +96,10 @@
         <button class="ferramenta-btn" onclick="adicionarElemento('rabisco')"><i class="fa-solid fa-pen-nib" style="width:20px;"></i> Citação Destaque</button>
         <button class="ferramenta-btn" onclick="adicionarElemento('mancha')"><i class="fa-solid fa-droplet" style="width:20px;"></i> Mancha de Tinta</button>
         
-        <label for="upload-imagem" class="ferramenta-btn" style="text-align:center;"><i class="fa-solid fa-image"></i> Upload Imagem</label>
-        <input type="file" id="upload-imagem" accept="image/*" onchange="processarUpload(event)">
+        <button class="ferramenta-btn" onclick="adicionarImagem()"><i class="fa-solid fa-image" style="width:20px;"></i> Adicionar Imagem</button>
         
         <hr style="opacity:0.2; margin:15px 0;">
-        <button class="ferramenta-btn" id="btn-borracha" onclick="toggleBorracha()" style="border-color: #ff4d4d; color: #ff4d4d; text-align: center;"><i class="fa-solid fa-eraser"></i> Ligar Borracha</button>
+        <button class="ferramenta-btn" id="btn-borracha" onclick="toggleBorracha()" style="border-color: rgb(255, 77, 77); color: rgb(255, 77, 77); text-align: center; background-color: transparent;"><i class="fa-solid fa-eraser"></i> Ligar Borracha</button>
         <button class="ferramenta-btn" onclick="adicionarNovaPagina()" style="text-align: center;"><i class="fa-solid fa-plus"></i> Nova Folha em Branco</button>
         <button class="ferramenta-btn btn-salvar" onclick="salvarGrimorio()"><i class="fa-solid fa-download"></i> Salvar e Baixar Código</button>
     </div>
@@ -164,7 +140,6 @@
         let spreadAtual = 0;
         let paginaSelecionadaId = 'conteudo-esq';
         
-        // Agora busca de forma 100% segura do cofre script
         let paginasData = JSON.parse(document.getElementById('data-storage').textContent);
 
         function abrirLivro() {
@@ -249,7 +224,7 @@
             if (spreadAtual < paginasData.length - 1) {
                 animarMudancaPagina(1);
             } else {
-                // REGRA NOVA: SE ACABOU A PÁGINA, FECHA O LIVRO!
+                // REGRA NOVA: SE CHEGAR À ÚLTIMA PÁGINA, FECHA O LIVRO AUTOMATICAMENTE!
                 fecharLivro();
             }
         }
@@ -343,16 +318,15 @@
             animarMudancaPagina(1); 
         }
 
-        function processarUpload(event) {
-            const file = event.target.files[0];
-            if(!file) return;
-            const reader = new FileReader();
-            reader.onload = e => {
-                const imgHTML = `<img src="${e.target.result}" class="imagem-customizada elemento-arrastavel" style="top: 100px; left: 100px;">`;
+        // NOVO SISTEMA LEVE: Digita o nome do ficheiro (ex: imagem_ff7f97.jpg)
+        function adicionarImagem() {
+            if(!livroAberto || modoBorracha || animando) return;
+            const nomeArquivo = prompt("Coloca o ficheiro da imagem na mesma pasta deste arquivo HTML.\n\nDigita o nome completo (ex: imagem_ff7f97.jpg) ou um link:");
+            if(nomeArquivo) {
+                const imgHTML = `<img src="${nomeArquivo}" class="imagem-customizada elemento-arrastavel" style="top: 100px; left: 100px;">`;
                 document.getElementById(paginaSelecionadaId).insertAdjacentHTML('beforeend', imgHTML);
                 salvarEstadoAtual();
-            };
-            reader.readAsDataURL(file);
+            }
         }
 
         let dragInfo = null;
@@ -387,7 +361,6 @@
             htmlClone.querySelector('#conteudo-esq').innerHTML = '';
             htmlClone.querySelector('#conteudo-dir').innerHTML = '';
             
-            // Salvando os dados no novo cofre inviolável
             htmlClone.querySelector('#data-storage').textContent = JSON.stringify(paginasData);
             
             htmlClone.querySelectorAll('.flip-page').forEach(el => el.remove());
@@ -405,43 +378,5 @@
             a.click();
         }
     </script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
 </body>
 </html>
