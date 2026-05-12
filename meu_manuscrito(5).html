@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grimório: O Arquivista</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Caveat:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: radial-gradient(circle at 80% 20%, #703600 0%, #291201 50%, #0a0400 100%); height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; color: #2c2c2c; font-family: 'Caveat', cursive;}
+        
+        .mesa { perspective: 2000px; transition: transform 1s; display: flex; align-items: center; transform: translateX(0); }
+        .livro { width: 500px; height: 700px; position: relative; transform-style: preserve-3d; transition: transform 1s;}
+        
+        /* Capa */
+        .capa-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; transform-origin: left center; transform-style: preserve-3d; transition: transform 1.2s; z-index: 10; cursor: pointer; }
+        .livro-aberto .capa-container { transform: rotateY(-180deg); box-shadow: 20px 20px 40px rgba(0,0,0,0.8); cursor: default; }
+        
+        .capa-frente { width: 100%; height: 100%; position: absolute; backface-visibility: hidden; background: #172419; border-radius: 3px 15px 15px 3px; box-shadow: inset 10px 0 20px rgba(0,0,0,0.6), 10px 10px 20px rgba(0,0,0,0.8); display: flex; flex-direction: column; justify-content: center; align-items: center; border: 1px solid #0a120b; }
+        .capa-frente::before { content: ''; position: absolute; top: 25px; bottom: 25px; left: 45px; right: 25px; border: 2px solid #b8860b; border-radius: 2px 10px 10px 2px; }
+        .lombada-frente { position: absolute; left: 0; top: 0; bottom: 0; width: 35px; background: linear-gradient(to right, #050a06, #172419, #050a06); border-right: 2px solid #050a06; }
+        .titulo-capa { color: #b8860b; font-family: 'Cinzel', serif; font-size: 46px; text-align: center; text-shadow: 2px 2px 5px rgba(0,0,0,0.9); margin: 20px 0; outline: none;}
+        .subtitulo-capa { color: #b8860b; font-family: 'Cinzel', serif; letter-spacing: 2px; font-size: 20px; outline: none;}
+
+        /* Páginas Internas */
+        .pagina { background-color: #e8d8bd; background-image: radial-gradient(circle at 100% 0%, rgba(255, 170, 50, 0.15) 0%, transparent 50%), radial-gradient(circle at center, transparent 30%, #c2a878 120%); font-size: 28px; line-height: 1.2; letter-spacing: 0.5px; color: #1f1107; overflow: hidden; position: absolute; height: 100%; width: 100%; }
+        .capa-verso { backface-visibility: hidden; transform: rotateY(180deg); border-radius: 15px 3px 3px 15px; box-shadow: inset -10px 0 30px rgba(0,0,0,0.2); }
+        .pagina-direita { top: 0; left: 0; border-radius: 3px 15px 15px 3px; box-shadow: inset 10px 0 30px rgba(0,0,0,0.2), 15px 15px 40px rgba(0,0,0,0.8); z-index: 1; }
+        
+        .conteudo-pagina { width: 100%; height: 100%; padding: 40px 50px; overflow-y: auto; overflow-x: hidden; position: relative; }
+        .conteudo-pagina::-webkit-scrollbar { width: 5px; }
+        .conteudo-pagina::-webkit-scrollbar-thumb { background: rgba(31, 17, 7, 0.3); border-radius: 10px; }
+
+        .dobradica-clicavel { position: absolute; left: -30px; top: 0; bottom: 0; width: 60px; cursor: pointer; z-index: 2000; display: none; }
+        .livro-aberto .dobradica-clicavel { display: block; }
+        .sombra-centro-esq { position: absolute; right: 0; top: 0; bottom: 0; width: 50px; background: linear-gradient(to left, rgba(60, 30, 10, 0.3), transparent); pointer-events: none; z-index: 900; }
+        .sombra-centro-dir { position: absolute; left: 0; top: 0; bottom: 0; width: 50px; background: linear-gradient(to right, rgba(60, 30, 10, 0.3), transparent); pointer-events: none; z-index: 900; }
+
+        /* Flip 3D (Virar de página) */
+        .flip-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; transform-origin: left center; transform-style: preserve-3d; transition: transform 0.8s ease-in-out; z-index: 50; pointer-events: none; }
+        .flip-frente, .flip-verso { position: absolute; top: 0; left: 0; width: 100%; height: 100%; backface-visibility: hidden; background-color: #e8d8bd; background-image: radial-gradient(circle at 100% 0%, rgba(255, 170, 50, 0.15) 0%, transparent 50%), radial-gradient(circle at center, transparent 30%, #c2a878 120%); overflow: hidden; }
+        .flip-frente { border-radius: 3px 15px 15px 3px; box-shadow: inset 10px 0 30px rgba(0,0,0,0.2), -5px 0 20px rgba(0,0,0,0.3); }
+        .flip-verso { transform: rotateY(180deg); border-radius: 15px 3px 3px 15px; box-shadow: inset -10px 0 30px rgba(0,0,0,0.2), 5px 0 20px rgba(0,0,0,0.3); }
+
+        .zona-virar { position: absolute; top: 0; bottom: 0; width: 60px; cursor: pointer; z-index: 1000; display: none; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; color: rgba(184, 134, 11, 0.8); font-size: 40px; }
+        .livro-aberto .zona-virar { display: flex; }
+        .zona-virar:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+        .virar-esq { left: 0; border-radius: 15px 0 0 15px; }
+        .virar-dir { right: 0; border-radius: 0 15px 15px 0; }
+
+        /* ====== TIPOGRAFIA SEGURA ====== */
+        h2.titulo-manuscrito { font-size: 42px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid rgba(31, 17, 7, 0.3); display: inline-block; outline: none; line-height: 1.1; min-height: 1.2em;}
+        .paragrafo-normal { margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em;}
+        .torto { display: block; transform: rotate(-2deg); margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em;}
+        .torto-direito { display: block; transform: rotate(2deg); margin-bottom: 20px; outline: none; position: relative; z-index: 5; min-height: 1.2em;}
+        .destaque { font-weight: bold; font-size: 30px; letter-spacing: 1px;}
+        
+        .elemento-arrastavel { position: absolute !important; cursor: grab; z-index: 800; mix-blend-mode: multiply; user-select: none; }
+        .imagem-customizada { max-width: 80%; height: auto; opacity: 0.85; }
+        .mancha-tinta { background: #120904; opacity: 0.80; filter: blur(1px); }
+
+        /* Painel e Interatividade */
+        .modo-editor .conteudo-pagina { outline: 2px dashed rgba(0,0,0,0.1); }
+        .modo-editor [contenteditable="true"]:hover { background: rgba(255, 255, 255, 0.2); border-radius: 5px; cursor: text; box-shadow: 0 0 0 4px rgba(255,255,255,0.2); }
+        .modo-editor .elemento-arrastavel:hover { outline: 2px dashed #b8860b; border-radius: 5px; }
+        .pagina-ativa { box-shadow: inset 0 0 0 4px rgba(184, 134, 11, 0.8) !important; }
+        .cursor-borracha, .cursor-borracha * { cursor: crosshair !important; }
+        .cursor-borracha [contenteditable="true"]:hover, .cursor-borracha .elemento-arrastavel:hover { background: rgba(255,0,0,0.2) !important; outline: 2px dashed red !important; box-shadow: none; }
+
+        #btn-toggle-editor { position: fixed; bottom: 20px; left: 20px; background: #172419; color: #b8860b; border: 2px solid #b8860b; padding: 10px 20px; border-radius: 8px; font-family: 'Cinzel'; cursor: pointer; z-index: 10000; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        #painel-editor { position: fixed; right: -350px; top: 0; width: 320px; height: 100%; background: #172419; border-left: 2px solid #b8860b; padding: 20px; transition: right 0.4s ease; z-index: 9999; overflow-y: auto; color: #f4f0e6; font-family: 'Lora', serif;}
+        #painel-editor.aberto { right: 0; }
+        .ferramenta-btn { display: block; width: 100%; background: transparent; color: #e8d8bd; border: 1px solid rgba(184, 134, 11, 0.4); padding: 10px; margin-bottom: 8px; border-radius: 4px; cursor: pointer; text-align: left; transition: 0.2s; font-size: 14px;}
+        .ferramenta-btn:hover { background: rgba(184, 134, 11, 0.2); border-color: #b8860b; }
+        #upload-imagem { display: none; }
+        .btn-salvar { background: #b8860b; color: #172419; font-weight: bold; text-align: center; margin-top: 15px;}
+    </style>
+</head>
+<body>
+
+    <script id="data-storage" type="application/json">
+        [
+          {
+            "esq": "<h2 class=\"titulo-manuscrito\">3 de março de 1921</h2><p class=\"paragrafo-normal\">Minha mãe me disse que as crianças esquecem rápido das coisas.</p><p class=\"torto\">Talvez ela esteja certa....</p><p class=\"paragrafo-normal\">Por isso decidi que irei anotar todas as coisas!!!!</p><p class=\"paragrafo-normal\">Tenho nove anos e eu acho que eu já percebi algo estranho nas pessoas adultas elas tendem fingem que lembram das coisas que entendem de tudo. Fingem muito bem mas não o suficiente. Elas esquecem e mentem acima de tudo buscando sempre estarem certas.</p><p class=\"torto-direito destaque\">Não sei exatamente o motivo disso</p>",
+            "dir": "<h2 class=\"titulo-manuscrito\">12 de março de 1921</h2><p class=\"paragrafo-normal\">Tenho uma casa pequena e simples, infelizmente pequena demais para quatro pessoas. Mas eu não me importo pelo menos ficamos bem juntos.</p><p class=\"paragrafo-normal\">Quando chove, a água escorre perto da janela da cozinha e meu pai fica irritado porque acha desperdício usar baldes bons para conter goteira. Minha mãe canta enquanto cozinha mesmo quando está triste. Principalmente quando está triste.</p><p class=\"torto-direito destaque\">Ela sempre está triste..<br>(DESENHO TRISTE DA MÃE)</p>"
+          },
+          {
+            "esq": "<h2 class=\"titulo-manuscrito\">18 de Março de 1921</h2><p class=\"torto-direito destaque\">DESCOBRI ALGO IMPORTANTE</p><p class=\"paragrafo-normal\">Pessoas mudam a voz dependendo de quem está ouvindo. Meu pai usa uma voz cansada comigo, uma voz educada com visitas e uma voz fria quando acha que ninguém está olhando.</p><p class=\"torto\">Isso é fascinante...</p><p class=\"paragrafo-normal\">Passei o jantar inteiro observando isso, e realmente é muito divertido. </p><p class=\"torto-direito destaque\">Ninguém percebe crianças quietas.</p>",
+            "dir": "<h2 class=\"titulo-manuscrito\">2 de Abril de 1921</h2><p class=\"torto-direito destaque\">Não consigo parar de perguntar coisas</p><p class=\"paragrafo-normal\">Hoje perguntei para minha mãe se ela ainda amava meu pai, ela deixou cair um prato... </p><p class=\"torto-direito destaque\">Acho que existem perguntas que pessoas adultas evitam porque sabem exatamente a resposta.</p>"
+          },
+          {
+            "esq": "<h2 class=\"titulo-manuscrito\">3 de Junho de 1921</h2><br><p class=\"torto-direito destaque\">Meu irmão voltou estranho</p><p class=\"paragrafo-normal\">Disseram que ele apenas se perdeu na floresta..</p><p class=\"torto\">Mentira!!!</p><p class=\"paragrafo-normal\">Pessoas não voltam com aquele olhar depois de simplesmente se perderem, Ele quase não fala agora. Passa horas parado olhando paredes ou janelas como se estivesse esperando algo aparecer do outro lado.</p><p class=\"torto\">Hoje perguntei o que aconteceu lá</p><p class=\"torto-direito destaque\">“Não gosto quando a floresta olha de volta.”</p>",
+            "dir": "<h2 class=\"titulo-manuscrito\">6 de Maio de 1927</h2><p class=\"torto-direito destaque\">Talvez eu devesse parar de escrever</p><p class=\"paragrafo-normal\">Começo a sentir que quanto mais registro as coisas… mais distante das pessoas eu fico, como se eu estivesse estudando os seres ao invés de vivendo entre eles.</p><p class=\"torto-direito destaque\">Isso não parece saudável.</p>"
+          },
+          {
+            "esq": "<h2 class=\"titulo-manuscrito\">17 de Junho de 1928</h2><p class=\"torto-direito destaque\">Última anotação.</p><p class=\"paragrafo-normal\">Meu pai encontrou alguns dos meus cadernos, ele parecia assustado, perguntou por que escrevo sobre pessoas daquele jeito.</p><p class=\"torto\">Não consegui responder</p><p class=\"paragrafo-normal\">Talvez porque eu também não saiba mais, vou parar de escrever por um tempo, Talvez esquecer algumas coisas seja necessário para continuar</p>",
+            "dir": "<br><br><br><p class=\"torto-direito destaque\">(obs: nn acabou pula umas 3 paginas)</p>"
+          },
+          { "esq": "", "dir": "" },
+          { "esq": "", "dir": "" },
+          { "esq": "", "dir": "" }
+        ]
+    </script>
+
+    <button id="btn-toggle-editor"><i class="fa-solid fa-wand-magic-sparkles"></i> Ativar Modo Editor</button>
+
+    <div id="painel-editor">
+        <h3 style="font-family:'Cinzel'; color:#b8860b; text-align:center; margin-bottom:10px;">Catálogo</h3>
+        <p style="font-size: 13px; color: #b8860b; margin-bottom: 15px; text-align: center; font-style: italic;">Clique na folha direita ou esquerda para selecionar, e depois adicione:</p>
+        
+        <button class="ferramenta-btn" onclick="adicionarElemento('titulo')"><i class="fa-solid fa-heading" style="width:20px;"></i> Título</button>
+        <button class="ferramenta-btn" onclick="adicionarElemento('paragrafo')"><i class="fa-solid fa-align-left" style="width:20px;"></i> Parágrafo Normal</button>
+        <button class="ferramenta-btn" onclick="adicionarElemento('torto')"><i class="fa-solid fa-italic" style="width:20px;"></i> Texto Torto</button>
+        <button class="ferramenta-btn" onclick="adicionarElemento('rabisco')"><i class="fa-solid fa-pen-nib" style="width:20px;"></i> Citação Destaque</button>
+        <button class="ferramenta-btn" onclick="adicionarElemento('mancha')"><i class="fa-solid fa-droplet" style="width:20px;"></i> Mancha de Tinta</button>
+        
+        <label for="upload-imagem" class="ferramenta-btn" style="text-align:center;"><i class="fa-solid fa-image"></i> Upload Imagem</label>
+        <input type="file" id="upload-imagem" accept="image/*" onchange="processarUpload(event)">
+        
+        <hr style="opacity:0.2; margin:15px 0;">
+        <button class="ferramenta-btn" id="btn-borracha" onclick="toggleBorracha()" style="border-color: #ff4d4d; color: #ff4d4d; text-align: center;"><i class="fa-solid fa-eraser"></i> Ligar Borracha</button>
+        <button class="ferramenta-btn" onclick="adicionarNovaPagina()" style="text-align: center;"><i class="fa-solid fa-plus"></i> Nova Folha em Branco</button>
+        <button class="ferramenta-btn btn-salvar" onclick="salvarGrimorio()"><i class="fa-solid fa-download"></i> Salvar e Baixar Código</button>
+    </div>
+
+    <div class="mesa" id="mesa-container">
+        <div class="livro" id="livro-principal">
+            
+            <div class="capa-container" id="capa" onclick="abrirLivro()">
+                <div class="capa-frente">
+                    <div class="lombada-frente"></div>
+                    <i class="fa-solid fa-book-journal-whills" style="color:#b8860b; font-size:50px;"></i>
+                    <h1 class="titulo-capa" id="titulo-livro">O Arquivista</h1>
+                    <p class="subtitulo-capa" id="subtitulo-livro">Manuscritos</p>
+                </div>
+                
+                <div class="pagina capa-verso" id="pagina-esq" onclick="selecionarPagina('esq')">
+                    <div class="sombra-centro-esq"></div>
+                    <div class="conteudo-pagina" id="conteudo-esq"></div>
+                    <div class="zona-virar virar-esq" onclick="virarEsquerda(event)"><i class="fa-solid fa-chevron-left"></i></div>
+                </div>
+            </div>
+
+            <div class="pagina pagina-direita" id="pagina-dir" onclick="selecionarPagina('dir')">
+                <div class="dobradica-clicavel" onclick="fecharLivro()" title="Fechar Livro"></div>
+                <div class="sombra-centro-dir"></div>
+                <div class="conteudo-pagina" id="conteudo-dir"></div>
+                <div class="zona-virar virar-dir" onclick="virarDireita(event)"><i class="fa-solid fa-chevron-right"></i></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let livroAberto = false;
+        let modoEditor = false;
+        let modoBorracha = false;
+        let animando = false; 
+        let spreadAtual = 0;
+        let paginaSelecionadaId = 'conteudo-esq';
+        
+        // Agora busca de forma 100% segura do cofre script
+        let paginasData = JSON.parse(document.getElementById('data-storage').textContent);
+
+        function abrirLivro() {
+            if(!livroAberto) {
+                document.body.classList.add('livro-aberto');
+                document.getElementById('mesa-container').style.transform = 'translateX(250px)';
+                livroAberto = true;
+                
+                document.getElementById('conteudo-esq').innerHTML = paginasData[spreadAtual].esq;
+                document.getElementById('conteudo-dir').innerHTML = paginasData[spreadAtual].dir;
+                atualizarModoEditorConteudo();
+            }
+        }
+
+        function fecharLivro() {
+            if(livroAberto && !animando) {
+                salvarEstadoAtual();
+                document.body.classList.remove('livro-aberto');
+                document.getElementById('mesa-container').style.transform = 'translateX(0)';
+                livroAberto = false;
+                if(modoEditor) document.getElementById('btn-toggle-editor').click();
+            }
+        }
+
+        function animarMudancaPagina(direcao) {
+            if (animando) return;
+            salvarEstadoAtual();
+            
+            let novoSpread = spreadAtual + direcao;
+            animando = true;
+
+            const flipEl = document.createElement('div');
+            flipEl.className = 'flip-page';
+            const frente = document.createElement('div'); frente.className = 'flip-frente';
+            const verso = document.createElement('div'); verso.className = 'flip-verso';
+
+            flipEl.appendChild(frente); flipEl.appendChild(verso);
+            document.getElementById('livro-principal').appendChild(flipEl);
+
+            if (direcao === 1) { 
+                frente.innerHTML = '<div class="sombra-centro-dir"></div><div class="conteudo-pagina">' + paginasData[spreadAtual].dir + '</div>';
+                verso.innerHTML = '<div class="sombra-centro-esq"></div><div class="conteudo-pagina">' + paginasData[novoSpread].esq + '</div>';
+                document.getElementById('conteudo-dir').innerHTML = paginasData[novoSpread].dir;
+
+                void flipEl.offsetWidth; 
+                flipEl.style.transform = 'rotateY(-180deg)';
+
+                setTimeout(() => {
+                    document.getElementById('conteudo-esq').innerHTML = paginasData[novoSpread].esq;
+                    flipEl.remove();
+                    spreadAtual = novoSpread;
+                    animando = false;
+                    atualizarModoEditorConteudo();
+                }, 800);
+            } else { 
+                flipEl.style.transform = 'rotateY(-180deg)'; 
+                frente.innerHTML = '<div class="sombra-centro-dir"></div><div class="conteudo-pagina">' + paginasData[novoSpread].dir + '</div>';
+                verso.innerHTML = '<div class="sombra-centro-esq"></div><div class="conteudo-pagina">' + paginasData[spreadAtual].esq + '</div>';
+                document.getElementById('conteudo-esq').innerHTML = paginasData[novoSpread].esq;
+
+                void flipEl.offsetWidth;
+                flipEl.style.transform = 'rotateY(0deg)'; 
+
+                setTimeout(() => {
+                    document.getElementById('conteudo-dir').innerHTML = paginasData[novoSpread].dir;
+                    flipEl.remove();
+                    spreadAtual = novoSpread;
+                    animando = false;
+                    atualizarModoEditorConteudo();
+                }, 800);
+            }
+        }
+
+        function virarEsquerda(e) { 
+            e.stopPropagation(); 
+            if (spreadAtual > 0) animarMudancaPagina(-1); 
+            else fecharLivro(); 
+        }
+        
+        function virarDireita(e) {
+            e.stopPropagation();
+            if (spreadAtual < paginasData.length - 1) {
+                animarMudancaPagina(1);
+            } else {
+                // REGRA NOVA: SE ACABOU A PÁGINA, FECHA O LIVRO!
+                fecharLivro();
+            }
+        }
+
+        function salvarEstadoAtual() {
+            if(!livroAberto) return;
+            const cloneEsq = document.getElementById('conteudo-esq').cloneNode(true);
+            const cloneDir = document.getElementById('conteudo-dir').cloneNode(true);
+            cloneEsq.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            cloneDir.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            paginasData[spreadAtual].esq = cloneEsq.innerHTML;
+            paginasData[spreadAtual].dir = cloneDir.innerHTML;
+        }
+
+        document.getElementById('conteudo-esq').addEventListener('click', () => selecionarPagina('esq'));
+        document.getElementById('conteudo-dir').addEventListener('click', () => selecionarPagina('dir'));
+
+        function selecionarPagina(lado) {
+            if(!modoEditor || modoBorracha || animando) return;
+            document.getElementById('pagina-esq').classList.remove('pagina-ativa');
+            document.getElementById('pagina-dir').classList.remove('pagina-ativa');
+            document.getElementById(lado === 'esq' ? 'pagina-esq' : 'pagina-dir').classList.add('pagina-ativa');
+            paginaSelecionadaId = lado === 'esq' ? 'conteudo-esq' : 'conteudo-dir';
+        }
+
+        function toggleBorracha() {
+            if(!livroAberto) return;
+            modoBorracha = !modoBorracha;
+            const btn = document.getElementById('btn-borracha');
+            if(modoBorracha) {
+                btn.style.backgroundColor = '#ff4d4d'; btn.style.color = '#fff';
+                btn.innerHTML = '<i class="fa-solid fa-eraser"></i> Borracha Ativa';
+                document.body.classList.add('cursor-borracha');
+            } else {
+                btn.style.backgroundColor = 'transparent'; btn.style.color = '#ff4d4d';
+                btn.innerHTML = '<i class="fa-solid fa-eraser"></i> Ligar Borracha';
+                document.body.classList.remove('cursor-borracha');
+            }
+        }
+
+        document.addEventListener('click', function(e) {
+            if(modoBorracha && modoEditor) {
+                const alvo = e.target.closest('.conteudo-pagina > *'); 
+                if(alvo && !alvo.classList.contains('sombra-centro-esq') && !alvo.classList.contains('sombra-centro-dir')) {
+                    alvo.remove(); salvarEstadoAtual();
+                }
+            }
+        });
+
+        document.getElementById('btn-toggle-editor').addEventListener('click', function() {
+            modoEditor = !modoEditor;
+            document.getElementById('painel-editor').classList.toggle('aberto');
+            document.body.classList.toggle('modo-editor');
+            document.getElementById('titulo-livro').contentEditable = modoEditor;
+            document.getElementById('subtitulo-livro').contentEditable = modoEditor;
+            atualizarModoEditorConteudo();
+            if(!modoEditor) { if(modoBorracha) toggleBorracha(); } else { selecionarPagina('esq'); }
+        });
+
+        function atualizarModoEditorConteudo() {
+            document.getElementById('conteudo-esq').contentEditable = "false";
+            document.getElementById('conteudo-dir').contentEditable = "false";
+            document.querySelectorAll('.conteudo-pagina > *').forEach(el => {
+                if(!el.classList.contains('elemento-arrastavel')) {
+                    el.contentEditable = modoEditor ? "true" : "false";
+                }
+            });
+        }
+
+        function adicionarElemento(tipo) {
+            if(!livroAberto || modoBorracha || animando) return;
+            const destino = document.getElementById(paginaSelecionadaId);
+            let html = '';
+            if (tipo === 'titulo') html = '<h2 class="titulo-manuscrito">Novo Título</h2>';
+            if (tipo === 'paragrafo') html = '<p class="paragrafo-normal">Escreva aqui...</p>';
+            if (tipo === 'torto') html = '<p class="torto">Anotação com pressa...</p>';
+            if (tipo === 'rabisco') html = '<p class="torto-direito destaque">"Revelação!"</p>';
+            if (tipo === 'mancha') {
+                const size = Math.floor(Math.random() * 40) + 20;
+                const rot = Math.floor(Math.random() * 360);
+                html = `<div class="mancha-tinta elemento-arrastavel" style="width: ${size}px; height: ${size}px; border-radius: 50%; transform: rotate(${rot}deg); top: 150px; left: 100px;"></div>`;
+            }
+            destino.insertAdjacentHTML('beforeend', html);
+            atualizarModoEditorConteudo(); salvarEstadoAtual();
+        }
+
+        function adicionarNovaPagina() {
+            if (animando) return;
+            salvarEstadoAtual();
+            paginasData.push({ esq: "", dir: "" });
+            animarMudancaPagina(1); 
+        }
+
+        function processarUpload(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = e => {
+                const imgHTML = `<img src="${e.target.result}" class="imagem-customizada elemento-arrastavel" style="top: 100px; left: 100px;">`;
+                document.getElementById(paginaSelecionadaId).insertAdjacentHTML('beforeend', imgHTML);
+                salvarEstadoAtual();
+            };
+            reader.readAsDataURL(file);
+        }
+
+        let dragInfo = null;
+        document.addEventListener('mousedown', function(e) {
+            if (modoBorracha || animando) return; 
+            let alvoArrastar = e.target.closest('.elemento-arrastavel');
+            if (modoEditor && alvoArrastar) {
+                dragInfo = { el: alvoArrastar, startX: e.clientX, startY: e.clientY, initLeft: alvoArrastar.offsetLeft, initTop: alvoArrastar.offsetTop };
+                alvoArrastar.style.cursor = 'grabbing'; e.preventDefault();
+            }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (dragInfo) {
+                dragInfo.el.style.left = (dragInfo.initLeft + (e.clientX - dragInfo.startX)) + 'px';
+                dragInfo.el.style.top = (dragInfo.initTop + (e.clientY - dragInfo.startY)) + 'px';
+            }
+        });
+        document.addEventListener('mouseup', function() {
+            if (dragInfo) { dragInfo.el.style.cursor = 'grab'; dragInfo = null; salvarEstadoAtual(); }
+        });
+
+        function salvarGrimorio() {
+            salvarEstadoAtual();
+            if (modoEditor) document.getElementById('btn-toggle-editor').click(); 
+
+            let htmlClone = document.documentElement.cloneNode(true);
+            htmlClone.querySelector('body').removeAttribute('class');
+            let mesa = htmlClone.querySelector('#mesa-container');
+            if(mesa) mesa.removeAttribute('style');
+            
+            htmlClone.querySelector('#conteudo-esq').innerHTML = '';
+            htmlClone.querySelector('#conteudo-dir').innerHTML = '';
+            
+            // Salvando os dados no novo cofre inviolável
+            htmlClone.querySelector('#data-storage').textContent = JSON.stringify(paginasData);
+            
+            htmlClone.querySelectorAll('.flip-page').forEach(el => el.remove());
+            htmlClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+            htmlClone.querySelectorAll('script').forEach(s => {
+                if(s.innerHTML.includes('live-server') || s.innerHTML.includes('WebSocket')) s.remove();
+            });
+
+            let htmlFinal = "<!DOCTYPE html>\n<html lang=\"pt-br\">\n" + htmlClone.outerHTML + "\n</html>";
+            
+            const blob = new Blob([htmlFinal], { type: "text/html" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "meu_manuscrito_seguro.html";
+            a.click();
+        }
+    </script>
+</body>
+</html>
